@@ -31,6 +31,10 @@
 
     告诉我们新文件index尚未跟踪，这是因为这个文件是新的，git不知道是应该跟踪它的变动呢，还是直接忽略不管呢。为了跟踪我们的新文件，我们需要暂存它。
 
+
+----------
+
+
  - 暂存区
     在git内有个概念叫暂存区
     > git add .  【它会监控工作去状态树，使用它会把工作时所有变化提交至暂存区，不包括被删除文件】
@@ -45,6 +49,9 @@
 
  -  取消已暂存内容
     简而言之，执行 git reset HEAD 以取消之前 git add 添加，但不希望包含在下一提交快照中的缓存。
+
+
+----------
 
 
  - 删除文件
@@ -70,8 +77,16 @@
 
     > git rm –r * 
 
+
+----------
+
+
  - 移动或重命名
     git mv 命令用于移动或重命名一个文件、目录、软连接。
+
+
+----------
+
 
  - 分支Branch
     >  git branch 【可以用来列出分支,创建分支和删除分支;列出本地所有分支,当前分支会被星号标示出,后面带名字即创建分支】
@@ -82,12 +97,27 @@
        git branch -vv  【可以查看本地分支对应的远程分支】
        git branch -m oldName newName 【分支重命名】
        git checkout - 【切换到上一个分支】
+       git push origin --delete [branch-name] 【删除远程分支】
+       git branch -dr [remote/branch] 【删除远程分支】
+       git merge 分支名 【用于合并指定分支到当前分支】
+       git checkout -b [branch] 【新建一个分支，并切换到该分支】
+       git branch --track [branch] [remote-branch] 【新建一个分支，与指定的远程分支建立追踪关系】
+       git checkout [branch-name] 【切换到指定分支，并更新工作区】
+       git cherry-pick [commit] 【选择一个commit，合并进当前分支】
+
+
+----------
+
 
  - 分支切换
     > git checkout master 【切换到主分支】
       git checkout -- file 【当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时】
       git reset HEAD file 【当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步,第一步使用此命令，第二布按上一个命令即可】
       git checkout -b  分支名 【创建并切换分支】
+
+
+----------
+
 
  - 远程仓库
     为了便于管理，Git要求每个远程主机都必须指定一个主机名。git remote命令就用于管理主机名。
@@ -108,10 +138,66 @@
     >  git remote show 主机名
     
 
+
+----------
+
+
  - 推送 PUSH
     git push命令会有两个参数，远端仓库的名字，以及分支的名字
     git push <远程主机名>   <本地分支名>:<远程分支名>。
     注！这里的主机名使用上面配置好的origin
-    git push origin master 将本地的master分支推送到了远程库的master分支，如果远程分之不存在将会被创建。
+    git push origin master 将本地的master分支推送到了远程库的master分支，**如果远程分之不存在将会被创建**。
     如果省略本地分支名，则表示删除指定的远程分支，因为这等同于推送一个空的本地分支到远程分支。注意第一个分支是不可以被删除的，我第一个创建的分支是joey/master
     如果省略远程分支名，则表示将本地分支推送到与之存在Tracking的远程分支。 （后面的：和远程分支名字省略）
+    
+    > git push origin test:master 【提交本地test分支作为远程的master分支】
+      git push origin test:test  【提交本地test分支作为远程的test分支】
+      git push origin :test  【刚提交到远程的test将被删除，但是本地还会保存的】
+
+
+----------
+
+
+ - pull 拉取
+    
+    > git pull origin 分支名 【将远程存储库中拉取至本地，也可以说关联】
+      git fetch origin master 【相当于是从远程获取最新版本到本地，不会自动合并】
+      git merge 【合并分支】
+
+
+----------
+
+
+ - 回滚
+    ### 恢复暂存区的指定文件到工作区
+    $ git checkout [file]
+    
+    ## 恢复某个commit的指定文件到暂存区和工作区
+    $ git checkout [commit] [file]
+    
+    ## 恢复暂存区的所有文件到工作区
+    $ git checkout .
+    
+    ## 重置暂存区的指定文件，与上一次commit保持一致，但工作区不变
+    $ git reset [file]
+    
+    ## 重置暂存区与工作区，与上一次commit保持一致
+    $ git reset --hard
+    
+    ## 重置当前分支的指针为指定commit，同时重置暂存区，但工作区不变
+    $ git reset [commit]
+    
+    ## 重置当前分支的HEAD为指定commit，同时重置暂存区和工作区，与指定commit一致
+    $ git reset --hard [commit]
+    
+    ## 重置当前HEAD为指定commit，但保持暂存区和工作区不变
+    $ git reset --keep [commit]
+    
+    ## 新建一个commit，用来撤销指定commit
+    ## 后者的所有变化都将被前者抵消，并且应用到当前分支
+    $ git revert [commit]
+    
+    ## 暂时将未提交的变化移除，稍后再移入
+    git stash
+    git stash pop
+    
